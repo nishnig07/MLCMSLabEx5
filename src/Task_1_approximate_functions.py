@@ -33,6 +33,7 @@ def approximateData_LinearFunction(dataset_path):
     """
     names = ['x', 'f(x)']
     data = pd.read_csv(dataset_path, sep=' ', names=names).to_numpy()
+    X_array = data[:, 0]
     X = data[:, 0].reshape((1000, 1))
     f = data[:, 1].reshape((1000, 1))
 
@@ -54,10 +55,67 @@ def approximateData_LinearFunction(dataset_path):
     plt.legend()
     plt.show()
 
+    """
+    Following code uses in-built library for least squares
+    np.linalg.lstsq
+    """
+    X_stacked = np.vstack([X_array, np.ones(len(X_array))]).T
+    m, _ = np.linalg.lstsq(X_stacked, data[:, 1], rcond=None)[0]
+    plt.plot(X_array, data[:, 1], 'o', label='actual f(x) values')
+    plt.plot(X_array, m * X_array, 'r', label='approximated f(x)_hat values')
+    plt.xlabel('x values')
+    plt.ylabel('f(x) and f(x)_hat values')
+    plt.legend()
+    plt.show()
+
+
+def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
+    """
+    This method implements the approximation for the given dataset.
+    The approximation is done using radial basis functions, where
+    f(x)_hat is the approximated function and is given by:
+
+    f(x) = c_1*phi_1 + c_2*phi_2 . . . c_l*phi_l
+    :param dataset_path: It is the path of the dataset
+    :param L: number of phi functions needed
+    :return:
+    """
+
+    """
+    Following block loads the data into columns 'x' and 'f(x)'
+    """
+    names = ['x', 'f(x)']
+    data = pd.read_csv(dataset_path, sep=' ', names=names).to_numpy()
+    X_array = data[:, 0]
+    X = data[:, 0].reshape((1000, 1))
+    f = data[:, 1].reshape((1000, 1))
+
+    # approx_func_C = np.linalg.inv(X.T @ X) @ X.T @ f
+    """
+    for any specific datapoint x, we calculate corresponding phi_l's.
+    phi_l = 1, when x_l = datapoint.
+    """
+    phi = np.empty([1000, L])
+    for eachpoint in range(L):
+        phi_l = np.exp(-np.square((X_array - X_array[eachpoint])/epsilon))
+        plt.scatter(X_array, phi_l)
+        phi[:, eachpoint] = phi_l
+
+    """
+    Now we calculate the Coefficient atrix which will decide the peak
+    of the phi functions to give the f(x)_hat approximated values.
+    """
+    # C = np.empty([1, L])
+    # plt.show()
+
+
 
 if __name__ == '__main__':
     cwd = Path.cwd()
     print(cwd)
     path = path = cwd / "datasets"
-    approximateData_LinearFunction(path / "linear_function_data.txt")
-    approximateData_LinearFunction(path / "nonlinear_function_data.txt")
+    # approximateData_LinearFunction(path / "linear_function_data.txt")
+    # approximateData_LinearFunction(path / "nonlinear_function_data.txt")
+    approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
+                                        7,
+                                        epsilon=0.7)

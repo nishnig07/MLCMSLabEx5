@@ -46,11 +46,11 @@ def approximateData_LinearFunction(dataset_path):
     Following block plots the x-values to actual f-values and approximated f-values  
     """
     plt.scatter(linear_data[:, 0], linear_data[:, 1], c='blue',
-                label='actual f values')
+                label='actual f(x) values')
     plt.plot(linear_data[:, 0], Approx_func_XAt, c='green',
-             label='approximated values')
+             label='approximated f(x)_hat values')
     plt.xlabel('x values')
-    plt.ylabel('f and f_hat values')
+    plt.ylabel('f(x) and f(x)_hat values')
     plt.legend()
     plt.show()
 

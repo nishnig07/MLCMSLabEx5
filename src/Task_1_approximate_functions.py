@@ -32,9 +32,9 @@ def approximateData_LinearFunction(dataset_path):
     Following block loads the data into columns 'x' and 'f(x)'
     """
     names = ['x', 'f(x)']
-    linear_data = pd.read_csv(dataset_path, sep=' ', names=names).to_numpy()
-    X = linear_data[:, 0].reshape((1000, 1))
-    f = linear_data[:, 1].reshape((1000, 1))
+    data = pd.read_csv(dataset_path, sep=' ', names=names).to_numpy()
+    X = data[:, 0].reshape((1000, 1))
+    f = data[:, 1].reshape((1000, 1))
 
     """
     Following block approximates using least-squares minimization formula mentioned above
@@ -45,9 +45,9 @@ def approximateData_LinearFunction(dataset_path):
     """
     Following block plots the x-values to actual f-values and approximated f-values  
     """
-    plt.scatter(linear_data[:, 0], linear_data[:, 1], c='blue',
+    plt.scatter(data[:, 0], data[:, 1], c='blue',
                 label='actual f(x) values')
-    plt.plot(linear_data[:, 0], Approx_func_XAt, c='green',
+    plt.plot(data[:, 0], Approx_func_XAt, c='green',
              label='approximated f(x)_hat values')
     plt.xlabel('x values')
     plt.ylabel('f(x) and f(x)_hat values')

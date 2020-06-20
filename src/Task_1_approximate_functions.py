@@ -123,3 +123,6 @@ if __name__ == '__main__':
     approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
                                         7,
                                         epsilon=0.8)
+    approximateData_RadialBasisFunction((path / "linear_function_data.txt"),
+                                        7,
+                                        epsilon=0.8)

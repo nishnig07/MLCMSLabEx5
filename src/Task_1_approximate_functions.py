@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize, rosen
 
 
 def approximateData_LinearFunction(dataset_path):
@@ -36,7 +37,6 @@ def approximateData_LinearFunction(dataset_path):
     X_array = data[:, 0]
     X = data[:, 0].reshape((1000, 1))
     f = data[:, 1].reshape((1000, 1))
-
     """
     Following block approximates using least-squares minimization formula mentioned above
     """
@@ -46,7 +46,8 @@ def approximateData_LinearFunction(dataset_path):
     """
     Following block plots the x-values to actual f-values and approximated f-values  
     """
-    plt.scatter(data[:, 0], data[:, 1], c='blue',
+    plt.scatter(data[:, 0], data[:, 1],
+                c='blue',
                 label='actual f(x) values')
     plt.plot(data[:, 0], Approx_func_XAt, c='green',
              label='approximated f(x)_hat values')
@@ -69,6 +70,7 @@ def approximateData_LinearFunction(dataset_path):
     plt.show()
 
 
+
 def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
     """
     This method implements the approximation for the given dataset.
@@ -89,25 +91,27 @@ def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
     X_array = data[:, 0]
     X = data[:, 0].reshape((1000, 1))
     f = data[:, 1].reshape((1000, 1))
-
-    # approx_func_C = np.linalg.inv(X.T @ X) @ X.T @ f
     """
     for any specific datapoint x, we calculate corresponding phi_l's.
     phi_l = 1, when x_l = datapoint.
     """
     phi = np.empty([1000, L])
     for eachpoint in range(L):
-        phi_l = np.exp(-np.square((X_array - X_array[eachpoint])/epsilon))
+        phi_l = np.exp(-np.square((X_array - X_array[eachpoint]) / epsilon))
         plt.scatter(X_array, phi_l)
         phi[:, eachpoint] = phi_l
-
+    plt.show()
     """
     Now we calculate the Coefficient atrix which will decide the peak
     of the phi functions to give the f(x)_hat approximated values.
     """
-    # C = np.empty([1, L])
-    # plt.show()
-
+    approx_func_Ct = np.linalg.inv(phi.T @ phi) @ phi.T @ f
+    plt.scatter(data[:, 0], data[:, 1],
+                c='blue',
+                label='actual f(x) values')
+    plt.scatter(data[:, 0], phi@approx_func_Ct, c='green',
+             label='approximated f(x)_hat values')
+    plt.show()
 
 
 if __name__ == '__main__':

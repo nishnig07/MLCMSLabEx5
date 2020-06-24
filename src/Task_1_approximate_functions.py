@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize, rosen
 
 
 def approximateData_LinearFunction(dataset_path):
@@ -40,8 +39,8 @@ def approximateData_LinearFunction(dataset_path):
     """
     Following block approximates using least-squares minimization formula mentioned above
     """
-    approx_func_A = np.linalg.inv(X.T @ X) @ X.T @ f
-    Approx_func_XAt = X * approx_func_A.T
+    approx_func_At = np.linalg.inv(X.T @ X) @ X.T @ f
+    Approx_func_XAt = X @ approx_func_At
 
     """
     Following block plots the x-values to actual f-values and approximated f-values  
@@ -89,7 +88,6 @@ def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
     names = ['x', 'f(x)']
     data = pd.read_csv(dataset_path, sep=' ', names=names).to_numpy()
     X_array = data[:, 0]
-    X = data[:, 0].reshape((1000, 1))
     f = data[:, 1].reshape((1000, 1))
     """
     for any specific datapoint x, we calculate corresponding phi_l's.
@@ -102,7 +100,7 @@ def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
         phi[:, eachpoint] = phi_l
     plt.show()
     """
-    Now we calculate the Coefficient atrix which will decide the peak
+    Now we calculate the Coefficient matrix which will decide the peak
     of the phi functions to give the f(x)_hat approximated values.
     """
     approx_func_Ct = np.linalg.inv(phi.T @ phi) @ phi.T @ f
@@ -117,13 +115,12 @@ def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
 if __name__ == '__main__':
     cwd = Path.cwd()
     print(cwd)
-
-    path = cwd / "datasets"
-    approximateData_LinearFunction(path / "linear_function_data.txt")
+    path = path = cwd / "datasets"
+    # approximateData_LinearFunction(path / "linear_function_data.txt")
     approximateData_LinearFunction(path / "nonlinear_function_data.txt")
-    approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
-                                        7,
-                                        epsilon=0.8)
-    approximateData_RadialBasisFunction((path / "linear_function_data.txt"),
-                                        7,
-                                        epsilon=0.8)
+    # approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
+    #                                     7,
+    #                                     epsilon=0.8)
+    # approximateData_RadialBasisFunction((path / "linear_function_data.txt"),
+    #                                     7,
+    #                                     epsilon=0.8)

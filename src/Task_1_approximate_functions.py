@@ -79,7 +79,9 @@ def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
     f(x) = c_1*phi_1 + c_2*phi_2 . . . c_l*phi_l
     :param dataset_path: It is the path of the dataset
     :param L: number of phi functions needed
-    :return:
+    :param epsilon: It is the bandwidth
+
+    :return: Plots the approximated values.
     """
 
     """
@@ -117,10 +119,10 @@ if __name__ == '__main__':
     print(cwd)
     path = path = cwd / "datasets"
     # approximateData_LinearFunction(path / "linear_function_data.txt")
-    approximateData_LinearFunction(path / "nonlinear_function_data.txt")
-    # approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
-    #                                     7,
-    #                                     epsilon=0.8)
+    # approximateData_LinearFunction(path / "nonlinear_function_data.txt")
+    approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
+                                        7,
+                                        epsilon=0.8)
     # approximateData_RadialBasisFunction((path / "linear_function_data.txt"),
     #                                     7,
     #                                     epsilon=0.8)

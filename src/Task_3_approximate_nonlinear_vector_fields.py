@@ -54,7 +54,7 @@ def approximate_nonlinear_vector_field(dataset_path):
     print(mean_squared_error)
 
 
-def approximate_nonlinear_vector_field_radial(dataset_path, L, L_eval, epsilon):
+def approximate_nonlinear_vector_field_radial(dataset_path, L, epsilon):
     """
     This method approximates the values of X1 in data sets, plots
     the initial points, and then calculates the approximated values
@@ -62,7 +62,6 @@ def approximate_nonlinear_vector_field_radial(dataset_path, L, L_eval, epsilon):
 
     :param dataset_path: This is the path of the data set
     :param L: This is the number of coefficients/centres we want to find.
-    :param L_eval: This is the index of centre where we want to approximate the field.
     :param epsilon: It is the bandwidth.
 
     :return: None, calculates the MSE.
@@ -99,14 +98,23 @@ def approximate_nonlinear_vector_field_radial(dataset_path, L, L_eval, epsilon):
         approx_func_Ct = np.linalg.inv(phi[:, :, each_L].T @ phi[:, :, each_L]) @ phi[:, :, each_L].T @ V
         Ct.append(approx_func_Ct)
     Ct = np.array(Ct)
-    approx_values = phi[:, :, L_eval] @ Ct[L_eval, :, :]
 
+    final_approx_values = np.empty((2000, 2))
+    for every_L in range(L):
+        approx_values = phi[:, :, every_L] @ Ct[every_L, :, :]
+        final_approx_values = final_approx_values + approx_values
     """
     The following code finds the MSE for the dataset X1 and the approx values at L_eval.
     Best value of L_eval will be the value at which the MSE will be minimum.
     """
-    MSE = np.square(data_X1 - approx_values).mean()
+    MSE = np.square(data_X1 - final_approx_values).mean()
     print(MSE)
+
+    """
+    Plots the final approximated values
+    """
+    plt.scatter(final_approx_values[:, 0], final_approx_values[:, 1])
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -114,6 +122,5 @@ if __name__ == '__main__':
     path = path = cwd / "datasets"
     # approximate_nonlinear_vector_field(path)
     approximate_nonlinear_vector_field_radial(path,
-                                              L=1000,
-                                              L_eval=500,
-                                              epsilon=0.5)
+                                              L=100,
+                                              epsilon=0.1)

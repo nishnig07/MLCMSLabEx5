@@ -79,42 +79,27 @@ def approximate_nonlinear_vector_field_radial(dataset_path, L, epsilon):
     Following block calculates the values of phi_l's for each point in dataset of X0
     and form the corresponding phi_X matrix with the given value of L.
     """
-    phi = []
-    for eachpoint in range(L):
-        phi_l = np.exp(-np.square((data_X0 - data_X0[eachpoint]) / epsilon))
-        phi.append(phi_l)
-    phi = np.array(phi)
-    phi = phi.reshape((2000, 2, L))
+
+    phi = np.empty([2000, L])
+    for l in range(L):
+        phi_l = np.exp(-np.square(np.linalg.norm(data_X0 - data_X0[l], axis=1))/epsilon**2)
+        phi[:, l] = phi_l
 
     """
     The following block performs the approximation of  the vector field.
-    
-    If finds the values for each of the value of L, and we can evaluate it at the
-    required value, L_eval.
     """
     V = (data_X1 - data_X0) / 0.1
-    Ct = []
-    for each_L in range(L):
-        approx_func_Ct = np.linalg.inv(phi[:, :, each_L].T @ phi[:, :, each_L]) @ phi[:, :, each_L].T @ V
-        Ct.append(approx_func_Ct)
-    Ct = np.array(Ct)
-
-    final_approx_values = np.empty((2000, 2))
-    for every_L in range(L):
-        approx_values = phi[:, :, every_L] @ Ct[every_L, :, :]
-        final_approx_values = final_approx_values + approx_values
-    """
-    The following code finds the MSE for the dataset X1 and the approx values at L_eval.
-    Best value of L_eval will be the value at which the MSE will be minimum.
-    """
-    MSE = np.square(data_X1 - final_approx_values).mean()
-    print(MSE)
-
-    """
-    Plots the final approximated values
-    """
-    plt.scatter(final_approx_values[:, 0], final_approx_values[:, 1])
+    approx_func_Ct = np.linalg.inv(phi.T @ phi) @ phi.T @ V
+    final = phi @ approx_func_Ct
+    plt.scatter(final[:, 0], final[:, 1], c='green',
+                label='approximated f(x)_hat values')
     plt.show()
+    """
+    The following code finds the MSE for the dataset X1 and the final values.
+    """
+
+    MSE = np.square(data_X1 - final).mean()
+    print(MSE)
 
 
 if __name__ == '__main__':
@@ -122,5 +107,5 @@ if __name__ == '__main__':
     path = path = cwd / "datasets"
     # approximate_nonlinear_vector_field(path)
     approximate_nonlinear_vector_field_radial(path,
-                                              L=100,
-                                              epsilon=0.1)
+                                              L=500,
+                                              epsilon=0.001)

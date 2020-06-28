@@ -65,7 +65,7 @@ def approximate_linear_vector_fields(dataset_1_path, dataset_2_path):
 
     #MSE
     MSE = np.square(X1-MA).mean()
-
+    print(MSE)
 
     # 3rd part
     t_eval = [i/20 for i in range(100)]

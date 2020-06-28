@@ -44,7 +44,7 @@ def approximate_linear_vector_fields(dataset_1_path, dataset_2_path):
     #     # plt.streamplot(x,y,u,v)
     # plt.show()
 
-    V = X1-X0/.1
+    V = (X1-X0)/.1
     A_hat = (np.linalg.inv(X0.T @ X0) @ X0.T @ V).T
     print(A_hat)
 
@@ -68,15 +68,20 @@ def approximate_linear_vector_fields(dataset_1_path, dataset_2_path):
 
 
     # 3rd part
-    t_eval = [i/1000 for i in range(500)]
+    t_eval = [i/20 for i in range(100)]
     sol = solve_ivp(fun=deriv, t_span=[0, 100], y0=[10,10], t_eval= t_eval, args=(A_hat,))
-    plt.scatter(sol.y[0,:], sol.y[1,:])
+    plt.scatter(sol.y[0, :], sol.y[1, :])
     plt.show()
 
-    # x, y = np.meshgrid(np.linspace(-10, 10, 287), np.linspace(-10, 10, 287))
-    # u, v = sol.y[0,:], sol.y[1,:]
-    # plt.streamplot(x,y,u,v)
-    # plt.show()
+    x, y = np.meshgrid(np.linspace(-10, 10, 20), np.linspace(-10, 10, 20))
+    u, v = np.zeros((20, 20)), np.zeros((20, 20))
+    for i in range(0,20):
+        for j in range(0, 20):
+            u[i,j] = sol.y[0,i*5]
+            v[i,j] = sol.y[1,j*5]
+    plt.quiver(x,y,u,v)
+    plt.streamplot(x,y, u, v)
+    plt.show()
     a = ''
 
 

@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+from scipy.interpolate import Rbf
+
 
 
 def lorenz(t, y, sigma, beta, rho):
@@ -12,38 +14,54 @@ def lorenz(t, y, sigma, beta, rho):
 
 
 # LORENZ ATTRACTOR
-def plot_lorenz_attractor(y, _sigma=None, _beta=None, _rho=None, t=None):
+def lorenz_attractor(y, sigma=None, beta=None, rho=None, t=None):
     # sigma, beta, rho -> a list of values. the list sizes must be the same.
     # y -> a list of lists containing x, y, z coordinates
 
-    if _sigma is None:
-        _sigma = [10]
-    if _beta is None:
-        _beta = [8 / 3]
+    if sigma is None:
+        sigma = 10
+    if beta is None:
+        beta = 8 / 3
     if t is None:
         t = [0, 100]
-    if _rho is None:
-        _rho = [28]
+    if rho is None:
+        rho = 28
 
-    for sigma, beta, rho in zip(_sigma, _beta, _rho):
-        alpha = 1
-        fig = plt.figure()
-        ax3 = fig.gca(projection='3d')
-        fig.suptitle(rf'Lorenz system with $\sigma$ = {sigma}, $\rho$ = {rho}, $\beta$ = {beta}')
-        for y0 in y:
-            res = solve_ivp(lorenz, t, y0, args=(sigma, beta, rho))
-            x, y, z = res.y
-            lab = str("x = " + str(y0[0]) + ", y = " + str(y0[1]) + ", z = " + str(y0[2]))
-            dt = 1
-            i = 0
-            # while i < x.shape[0] - 2 * dt:
+    res = solve_ivp(lorenz, t, y, args=(sigma, beta, rho))
+    x, y, z = res.y
 
-            ax3.plot(x[:len(z)-2], x[1:len(z)-1], x[2:len(z)])
-                # i += 2 * dt + 1
-            alpha *= 0.65
+    # reconstructed figure of lorenz attractor along x-axis
+    dt = 1
+    fig = plt.figure()
+    ax3 = fig.gca(projection='3d')
+    fig.suptitle(rf'Lorenz system with $\sigma$ = {sigma}, $\rho$ = {rho}, $\beta$ = {beta}')
+    ax3.plot(x[:len(z)-2*dt], x[1*dt:len(z)-1*dt], x[2*dt:len(z)])
+    plt.show()
 
-        # ax3.legend()
-        plt.show()
+    # reconstructed figure of lorenz attractor along y-axis
+    dt = 1
+    fig = plt.figure()
+    ax3 = fig.gca(projection='3d')
+    fig.suptitle(rf'Lorenz system with $\sigma$ = {sigma}, $\rho$ = {rho}, $\beta$ = {beta}')
+    ax3.plot(y[:len(z)-2*dt], y[1*dt:len(z)-1*dt], y[2*dt:len(z)])
+    plt.show()
+
+    # reconstructed figure of lorenz attractor along z-axis
+    dt = 1
+    fig = plt.figure()
+    ax3 = fig.gca(projection='3d')
+    fig.suptitle(rf'Lorenz system with $\sigma$ = {sigma}, $\rho$ = {rho}, $\beta$ = {beta}')
+    ax3.plot(z[:len(z) - 2 * dt], z[1 * dt:len(z) - 1 * dt], z[2 * dt:len(z)])
+    plt.show()
+
+    # original figure
+    fig = plt.figure()
+    ax3 = fig.gca(projection='3d')
+    fig.suptitle(rf'Lorenz system with $\sigma$ = {sigma}, $\rho$ = {rho}, $\beta$ = {beta}')
+    ax3.plot(x, y, z)
+    plt.show()
+
+    return x
 
 
 if __name__ == '__main__':
@@ -54,18 +72,31 @@ if __name__ == '__main__':
     dn = 1
     plt.figure()
     while i < data.shape[0]:
-        # if data[i, 0] in hist:
-        #     break
         plt.scatter(i, data[i, 0], c='blue')
-        plt.scatter(i, data[i, 1], c='red')
+        # plt.scatter(i, data[i, 1], c='red')
         i += dn
+    plt.xlabel('Time')
+    plt.ylabel('x')
     plt.show()
 
-    # Plot takens theory
+    dt = 50
+    no_of_coord = 334
+
+    # Plot x, y of the data-set
     plt.figure()
-    plt.plot(data[:400, 0], data[:400, 1])
+    plt.plot(data[:no_of_coord, 0], data[:no_of_coord, 1])
+    plt.xlabel('y')
+    plt.ylabel('x')
     plt.show()
 
-    # Plot lorenz attractor with only x, for verifying takens theory
-    y = [[10, 10, 10]]
-    plot_lorenz_attractor(y)
+    plt.figure()
+    plt.plot(data[range(no_of_coord), 0], data[range(dt, no_of_coord+dt), 0])
+    plt.xlabel('dt')
+    plt.ylabel('x')
+    plt.show()
+
+    # reconstruct lorenz attractor using values along 1-axis
+    y = [10, 10, 10]
+    x = lorenz_attractor(y)
+
+

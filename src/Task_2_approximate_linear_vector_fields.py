@@ -42,14 +42,6 @@ def approximate_linear_vector_fields(dataset_1_path, dataset_2_path):
 
     V = (X1 - X0) / .1
 
-    # x, y = np.meshgrid(np.linspace(-2, 2, 20), np.linspace(-2, 2, 20))
-    # u, v = np.zeros((20, 20)), np.zeros((20, 20))
-    # for i in range(0, 20):
-    #     for j in range(0, 20):
-    #         u[i, j] = V.T[0, i * 50]
-    #         v[i, j] = V.T[1, j * 50]
-    # plt.quiver(x, y, u, v)
-    # plt.streamplot(x, y, u, v)
     plt.show()
 
     """
@@ -73,6 +65,7 @@ def approximate_linear_vector_fields(dataset_1_path, dataset_2_path):
     # MSE
     MSE = np.square(X1 - X1_approx).mean()
     print("MSE: " + str(MSE))
+
 
     """
     Part3: Following code deals with part 3 of of the task.

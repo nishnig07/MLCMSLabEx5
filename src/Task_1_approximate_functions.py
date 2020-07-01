@@ -72,6 +72,7 @@ def approximateData_LinearFunction(dataset_path):
 
 def approximateData_RadialBasisFunction(dataset_path, L, epsilon):
     """
+    Part 3:
     This method implements the approximation for the given dataset.
     The approximation is done using radial basis functions, where
     f(x)_hat is the approximated function and is given by:
@@ -123,6 +124,6 @@ if __name__ == '__main__':
     approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
                                         7,
                                         epsilon=0.8)
-    # approximateData_RadialBasisFunction((path / "linear_function_data.txt"),
-    #                                     7,
-    #                                     epsilon=0.8)
+    approximateData_RadialBasisFunction((path / "linear_function_data.txt"),
+                                        7,
+                                        epsilon=0.8)

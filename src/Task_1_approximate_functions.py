@@ -119,8 +119,8 @@ if __name__ == '__main__':
     cwd = Path.cwd()
     print(cwd)
     path = path = cwd / "datasets"
-    # approximateData_LinearFunction(path / "linear_function_data.txt")
-    # approximateData_LinearFunction(path / "nonlinear_function_data.txt")
+    approximateData_LinearFunction(path / "linear_function_data.txt")
+    approximateData_LinearFunction(path / "nonlinear_function_data.txt")
     approximateData_RadialBasisFunction((path / "nonlinear_function_data.txt"),
                                         7,
                                         epsilon=0.8)

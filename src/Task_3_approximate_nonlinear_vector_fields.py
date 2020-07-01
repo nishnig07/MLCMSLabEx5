@@ -154,6 +154,6 @@ if __name__ == '__main__':
     cwd = Path.cwd()
     path = path = cwd / "datasets"
     approximate_nonlinear_vector_field(path)
-    # approximate_nonlinear_vector_field_radial(path,
-    #                                           L=500,
-    #                                           epsilon=0.01)
+    approximate_nonlinear_vector_field_radial(path,
+                                              L=500,
+                                              epsilon=0.01)
